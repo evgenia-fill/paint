@@ -11,6 +11,11 @@ class MyGraphicsView(QGraphicsView):
         self.path = QPainterPath()
         self.path_item = None
         self.color = QColor("black")
+        self.width = 3
+        self.tool = "pen"
+
+    def set_tool(self, name):
+        self.tool = name
 
     def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.LeftButton:
@@ -18,6 +23,11 @@ class MyGraphicsView(QGraphicsView):
             start_pos = self.mapToScene(event.pos())
             self.path = QPainterPath(start_pos)
             self.path_item = QGraphicsPathItem(self.path)
+            if self.tool == "pen":
+                pen = QPen(self.color, self.width)
+            elif self.tool == "eraser":
+                pen = QPen(QColor("white"), self.width * 1.5)
+            self.path_item.setPen(pen)
             self.scene().addItem(self.path_item)
 
     def mouseMoveEvent(self, event: QMouseEvent):
