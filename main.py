@@ -1,21 +1,22 @@
 import os
-os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
+
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
+    ".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
 
 import sys
-from PyQt5.QtWidgets import QApplication, QLabel, QGraphicsView, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem
-from PyQt5.QtGui import QColor, QBrush
+from PyQt5.QtWidgets import QApplication, QGraphicsView, QMainWindow, QGraphicsScene
+from PyQt5.QtGui import QColor
+from canvas import MyGraphicsView
 
-# app = QApplication([])
-# label = QLabel('Hello, World')
-# label.show()
-# app.exec_()
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Paint")
+        self.setGeometry(100, 100, 800, 600)
         self.scene = QGraphicsScene()
-        self.view = QGraphicsView(self.scene, self)
+        self.scene.setBackgroundBrush(QColor("white"))
+        self.view = MyGraphicsView(self.scene, self)
         self.setCentralWidget(self.view)
 
 
