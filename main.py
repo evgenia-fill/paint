@@ -4,8 +4,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
     ".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
 
 import sys
-from PyQt5.QtWidgets import QApplication, QGraphicsView, QMainWindow, QGraphicsScene, QAction, QFileDialog
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog
 from canvas import MyGraphicsView
 
 
@@ -18,6 +17,54 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.canvas)
 
         menubar = self.menuBar()
+
+        file_menu = menubar.addMenu("File")
+        clear_action = QAction("Clear all", self)
+        clear_action.triggered.connect(self.canvas.clear_canvas)
+        save_action = QAction("Save", self)
+        save_action.triggered.connect(self.canvas.save_canvas)
+        exit_action = QAction("Exit", self)
+        exit_action.triggered.connect(self.canvas.exit_canvas)
+        file_menu.addAction(clear_action)
+        file_menu.addAction(save_action)
+        file_menu.addAction(exit_action)
+
+        tool_menu = menubar.addMenu("Tools")
+        tool_pen = QAction("Pen", self)
+        tool_pen.triggered.connect(self.canvas.set_pen_tool)
+        tool_eraser = QAction("Eraser", self)
+        tool_eraser.triggered.connect(self.canvas.set_eraser_tool)
+        tool_bucket = QAction("Bucket", self)
+        tool_bucket.triggered.connect(self.canvas.set_bucket_tool)
+        tool_menu.addAction(tool_pen)
+        tool_menu.addAction(tool_eraser)
+        tool_menu.addAction(tool_bucket)
+
+        pen_menu = menubar.addMenu("Pen")
+        pen_action = QAction("Pen", self)
+        pen_action.triggered.connect(self.canvas.set_pen_tool)
+        pen_color_action = QAction("Color", self)
+        increase_size_action = QAction("Increase size", self)
+        decrease_size_action = QAction("Decrease size", self)
+        pen_menu.addAction(pen_color_action)
+        pen_menu.addAction(increase_size_action)
+        pen_menu.addAction(decrease_size_action)
+
+        eraser_menu = menubar.addMenu("Eraser")
+        eraser_action = QAction("Eraser", self)
+        eraser_action.triggered.connect(self.canvas.set_eraser_tool)
+        increase_size_action = QAction("Increase size", self)
+        decrease_size_action = QAction("Decrease size", self)
+        eraser_menu.addAction(increase_size_action)
+        eraser_menu.addAction(decrease_size_action)
+
+        bucket_menu = menubar.addMenu("Bucket")
+        bucket_action = QAction("Bucket", self)
+        bucket_action.triggered.connect(self.canvas.set_bucket_tool)
+        bucket_color_action = QAction("Color", self)
+        bucket_menu.addAction(bucket_color_action)
+
+
 
 
 if __name__ == "__main__":
