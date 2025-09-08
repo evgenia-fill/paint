@@ -4,7 +4,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
     ".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog, QInputDialog
 from canvas import MyGraphicsView
 
 
@@ -44,27 +44,25 @@ class MainWindow(QMainWindow):
         pen_action = QAction("Pen", self)
         pen_action.triggered.connect(self.canvas.set_pen_tool)
         pen_color_action = QAction("Color", self)
-        increase_size_action = QAction("Increase size", self)
-        decrease_size_action = QAction("Decrease size", self)
+        pen_color_action.triggered.connect(lambda: self.canvas.select_color("pen"))
+        set_size_action = QAction("Set size", self)
+        set_size_action.triggered.connect(lambda: self.canvas.set_size("pen"))
+        pen_menu.addAction(set_size_action)
         pen_menu.addAction(pen_color_action)
-        pen_menu.addAction(increase_size_action)
-        pen_menu.addAction(decrease_size_action)
 
         eraser_menu = menubar.addMenu("Eraser")
         eraser_action = QAction("Eraser", self)
         eraser_action.triggered.connect(self.canvas.set_eraser_tool)
-        increase_size_action = QAction("Increase size", self)
-        decrease_size_action = QAction("Decrease size", self)
-        eraser_menu.addAction(increase_size_action)
-        eraser_menu.addAction(decrease_size_action)
+        set_size_action_eraser = QAction("Set size", self)
+        set_size_action_eraser.triggered.connect(lambda: self.canvas.set_size("eraser"))
+        eraser_menu.addAction(set_size_action_eraser)
 
         bucket_menu = menubar.addMenu("Bucket")
         bucket_action = QAction("Bucket", self)
         bucket_action.triggered.connect(self.canvas.set_bucket_tool)
         bucket_color_action = QAction("Color", self)
+        bucket_color_action.triggered.connect(lambda: self.canvas.select_color("bucket"))
         bucket_menu.addAction(bucket_color_action)
-
-
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog
 from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter
 from PyQt5.QtCore import Qt
 
@@ -10,6 +10,7 @@ class MyGraphicsView(QWidget):
         self.scene = QImage(weight, height, QImage.Format_RGB16)
         self.scene.fill(QColor("white"))
         self.pen_width = 3
+        self.eraser_width = 4
         self.pen_color = QColor("black")
         self.bucket_color = QColor("blue")
         self.tool = "pen"  # pen, eraser, bucket
@@ -17,6 +18,15 @@ class MyGraphicsView(QWidget):
 
     def set_tool(self, name):
         self.tool = name
+
+    def set_pen_tool(self):
+        self.tool = "pen"
+
+    def set_eraser_tool(self):
+        self.tool = "eraser"
+
+    def set_bucket_tool(self):
+        self.tool = "bucket"
 
     def set_pen_width(self, width):
         self.pen_width = width
@@ -55,7 +65,7 @@ class MyGraphicsView(QWidget):
         if self.tool == "pen":
             pen = QPen(self.pen_color, self.pen_width)
         elif self.tool == "eraser":
-            pen = QPen(QColor("white"), self.pen_width * 1.5)
+            pen = QPen(QColor("white"), self.eraser_width)
         painter.setPen(pen)
         painter.drawLine(self.last_point, end_pos)
         self.last_point = end_pos
@@ -73,3 +83,34 @@ class MyGraphicsView(QWidget):
                 if current_color == target_color:
                     self.scene.setPixelColor(cx, cy, new_color)
                     stack.extend([(cx + dx, cy + dy) for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]])
+
+    def clear_canvas(self):
+        pass
+
+    def save_canvas(self):
+        pass
+
+    def exit_canvas(self):
+        pass
+
+    def select_color(self, tool: str):
+        color = QColorDialog.getColor(initial=self.pen_color, parent=self)
+        if color.isValid():
+            if tool == "pen":
+                self.pen_color = color
+            elif tool == "bucket":
+                self.bucket_color = color
+
+    def set_size(self, tool: str):
+        if tool == "pen":
+            current = self.pen_width
+        elif tool == "eraser":
+            current = self.eraser_width
+        else:
+            return
+        size, ok = QInputDialog.getInt(self, "Set Size", f"Enter {tool} size:", value=current, min=1, max=50)
+        if ok:
+            if tool == "pen":
+                self.pen_width = size
+            elif tool == "eraser":
+                self.eraser_width = size
