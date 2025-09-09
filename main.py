@@ -6,6 +6,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction
 from canvas import MyGraphicsView
+from functions import Functions
 
 
 class MainWindow(QMainWindow):
@@ -15,16 +16,17 @@ class MainWindow(QMainWindow):
         self.setFixedSize(800, 600)
         self.canvas = MyGraphicsView(800, 600)
         self.setCentralWidget(self.canvas)
+        self.functions = Functions(self.canvas)
 
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("File")
         clear_action = QAction("Clear all", self)
-        clear_action.triggered.connect(self.canvas.clear_canvas)
+        clear_action.triggered.connect(self.functions.clear_canvas)
         save_action = QAction("Save file", self)
-        save_action.triggered.connect(self.canvas.save_canvas)
+        save_action.triggered.connect(self.functions.save_canvas)
         exit_action = QAction("Load file", self)
-        exit_action.triggered.connect(self.canvas.load_canvas)
+        exit_action.triggered.connect(self.functions.load_canvas)
         file_menu.addAction(clear_action)
         file_menu.addAction(save_action)
         file_menu.addAction(exit_action)
@@ -44,9 +46,9 @@ class MainWindow(QMainWindow):
         pen_action = QAction("Pen", self)
         pen_action.triggered.connect(self.canvas.set_pen_tool)
         pen_color_action = QAction("Color", self)
-        pen_color_action.triggered.connect(lambda: self.canvas.select_color("pen"))
+        pen_color_action.triggered.connect(lambda: self.functions.select_color("pen"))
         set_size_action = QAction("Set size", self)
-        set_size_action.triggered.connect(lambda: self.canvas.set_size("pen"))
+        set_size_action.triggered.connect(lambda: self.functions.set_size("pen"))
         pen_menu.addAction(set_size_action)
         pen_menu.addAction(pen_color_action)
 
@@ -54,14 +56,14 @@ class MainWindow(QMainWindow):
         eraser_action = QAction("Eraser", self)
         eraser_action.triggered.connect(self.canvas.set_eraser_tool)
         set_size_action_eraser = QAction("Set size", self)
-        set_size_action_eraser.triggered.connect(lambda: self.canvas.set_size("eraser"))
+        set_size_action_eraser.triggered.connect(lambda: self.functions.set_size("eraser"))
         eraser_menu.addAction(set_size_action_eraser)
 
         bucket_menu = menubar.addMenu("Bucket")
         bucket_action = QAction("Bucket", self)
         bucket_action.triggered.connect(self.canvas.set_bucket_tool)
         bucket_color_action = QAction("Color", self)
-        bucket_color_action.triggered.connect(lambda: self.canvas.select_color("bucket"))
+        bucket_color_action.triggered.connect(lambda: self.functions.select_color("bucket"))
         bucket_menu.addAction(bucket_color_action)
 
 
