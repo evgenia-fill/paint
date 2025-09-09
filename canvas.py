@@ -1,6 +1,20 @@
 from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
-from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter
+from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter, QPixmap
 from PyQt5.QtCore import Qt
+from PIL import Image
+
+
+def pil2qimage(im: Image.Image):
+    im = im.convert("RGBA")
+    data = im.tobytes("raw", "RGBA")
+    qimage = QImage(
+        data,
+        im.width,
+        im.height,
+        im.width * 4,
+        QImage.Format_RGBA8888,
+    )
+    return qimage.copy()
 
 
 class MyGraphicsView(QWidget):
@@ -97,6 +111,20 @@ class MyGraphicsView(QWidget):
         )
         if file_path:
             self.scene.save(file_path)
+
+    def load_canvas(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Open Image",
+            "",
+            "Images (*.png *.jpg *.jpeg *.bmp)"
+        )
+        if file_path:
+            im = Image.open(file_path)
+            qimage = pil2qimage(im)
+            self.scene = qimage
+            self.setFixedSize(qimage.width(), qimage.height())
+            self.update()
 
     def select_color(self, tool: str):
         color = QColorDialog.getColor(initial=self.pen_color, parent=self)
