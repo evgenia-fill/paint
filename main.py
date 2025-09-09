@@ -4,7 +4,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
     ".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog, QInputDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction
 from canvas import MyGraphicsView
 
 

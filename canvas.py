@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog
+from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
 from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter
 from PyQt5.QtCore import Qt
 
@@ -85,13 +85,18 @@ class MyGraphicsView(QWidget):
                     stack.extend([(cx + dx, cy + dy) for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]])
 
     def clear_canvas(self):
-        pass
+        self.scene.fill(QColor("white"))
+        self.update()
 
     def save_canvas(self):
-        pass
-
-    def exit_canvas(self):
-        pass
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Image",
+            "",
+            "Images (*.png *.jpg *.jpeg *.bmp)"
+        )
+        if file_path:
+            self.scene.save(file_path)
 
     def select_color(self, tool: str):
         color = QColorDialog.getColor(initial=self.pen_color, parent=self)
