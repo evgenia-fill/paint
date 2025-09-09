@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
 from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter, QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect
 
 
 class MyGraphicsView(QWidget):
     def __init__(self, weight=600, height=800):
         super().__init__()
+        self.start_point = None
         self.last_point = None
         self.scene = QImage(weight, height, QImage.Format_RGB16)
         self.scene.fill(QColor("white"))
@@ -13,7 +14,7 @@ class MyGraphicsView(QWidget):
         self.eraser_width = 4
         self.pen_color = QColor("black")
         self.bucket_color = QColor("blue")
-        self.tool = "pen"  # pen, eraser, bucket
+        self.tool = "pen"  # pen, eraser, bucket, shapes
         self.setFixedSize(weight, height)
 
     def set_tool(self, name):
@@ -27,6 +28,15 @@ class MyGraphicsView(QWidget):
 
     def set_bucket_tool(self):
         self.tool = "bucket"
+
+    def set_line_tool(self):
+        self.tool = "line"
+
+    def set_rect_tool(self):
+        self.tool = "rect"
+
+    def set_ellipse_tool(self):
+        self.tool = "ellipse"
 
     def set_pen_width(self, width):
         self.pen_width = width
@@ -47,18 +57,32 @@ class MyGraphicsView(QWidget):
             if self.tool == "bucket":
                 self.fill_bucket(start_pos.x(), start_pos.y(), self.bucket_color)
                 self.update()
-            else:
+            elif self.tool in ["pen", "eraser"]:
                 self.last_point = start_pos
                 self.draw_line(start_pos)
+            elif self.tool in ["line", "rect", "ellipse"]:
+                self.start_point = start_pos
 
     def mouseMoveEvent(self, event: QMouseEvent):
         if self.tool in ["eraser", "pen"] and self.last_point is not None:
             self.draw_line(event.pos())
 
     def mouseReleaseEvent(self, event: QMouseEvent):
-        if self.tool in ["eraser", "pen"] and self.last_point is not None:
-            self.draw_line(event.pos())
-            self.last_point = None
+        if self.tool in ["line", "rect", "ellipse"] and self.start_point is not None:
+            end_point = event.pos()
+            painter = QPainter(self.scene)
+            pen = QPen(self.pen_color, self.pen_width)
+            painter.setPen(pen)
+            if self.tool == "line":
+                painter.drawLine(self.start_point, end_point)
+            elif self.tool == "rect":
+                rect = QRect(self.start_point, end_point)
+                painter.drawRect(rect)
+            elif self.tool == "ellipse":
+                rect = QRect(self.start_point, end_point)
+                painter.drawEllipse(rect)
+            self.start_point = None
+            self.update()
 
     def draw_line(self, end_pos):
         painter = QPainter(self.scene)
