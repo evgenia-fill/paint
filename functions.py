@@ -34,7 +34,7 @@ class Functions(QWidget):
             "Images (*.png *.jpg *.jpeg *.bmp)"
         )
         if file_path:
-            self.scene.save(file_path)
+            self.canvas.scene.save(file_path)
 
     def load_canvas(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -46,9 +46,9 @@ class Functions(QWidget):
         if file_path:
             im = Image.open(file_path)
             qimage = pil2qimage(im)
-            canvas.scene = qimage
-            self.setFixedSize(qimage.width(), qimage.height())
-            self.update()
+            self.canvas.scene = qimage
+            self.canvas.setFixedSize(qimage.width(), qimage.height())
+            self.canvas.update()
 
     def select_color(self, tool: str):
         color = QColorDialog.getColor(initial=self.canvas.pen_color, parent=self)
