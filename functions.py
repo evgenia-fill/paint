@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
 from PyQt5.QtGui import QColor, QImage
 from PIL import Image
-from canvas import MyGraphicsView as canvas
+from resize_dialog import ResizeDialog
 
 
 def pil2qimage(im: Image.Image):
@@ -71,3 +71,15 @@ class Functions(QWidget):
                 self.canvas.pen_width = size
             elif tool == "eraser":
                 self.canvas.eraser_width = size
+
+    def resize_canvas(self):
+        current_w = self.canvas.width()
+        current_h = self.canvas.height()
+
+        dialog = ResizeDialog(current_w, current_h, self.canvas.parentWidget())
+        if dialog.exec_():
+            new_w, new_h = dialog.get_values()
+            self.canvas.resize_canvas(new_w, new_h)
+            main_window = self.canvas.parentWidget()
+            menubar_height = main_window.menuBar().height()
+            main_window.setFixedSize(new_w, new_h + menubar_height)

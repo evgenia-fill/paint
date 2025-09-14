@@ -107,3 +107,13 @@ class MyGraphicsView(QWidget):
                 if current_color == target_color:
                     self.scene.setPixelColor(cx, cy, new_color)
                     stack.extend([(cx + dx, cy + dy) for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]])
+
+    def resize_canvas(self, w, h):
+        new_scene = QImage(w, h, QImage.Format_RGB16)
+        new_scene.fill(Qt.white)
+        painter = QPainter(new_scene)
+        painter.drawImage(0, 0, self.scene)
+        painter.end()
+        self.scene = new_scene
+        self.setFixedSize(w, h)
+        self.update()

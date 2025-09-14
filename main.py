@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Paint")
-        self.setFixedSize(800, 600)
+        self.resize(800, 600)
         self.canvas = MyGraphicsView(800, 600)
         self.setCentralWidget(self.canvas)
         self.functions = Functions(self.canvas)
@@ -27,9 +27,12 @@ class MainWindow(QMainWindow):
         save_action.triggered.connect(self.functions.save_canvas)
         exit_action = QAction("Load file", self)
         exit_action.triggered.connect(self.functions.load_canvas)
+        resize_action = QAction("Set size", self)
+        resize_action.triggered.connect(self.functions.resize_canvas)
         file_menu.addAction(clear_action)
         file_menu.addAction(save_action)
         file_menu.addAction(exit_action)
+        file_menu.addAction(resize_action)
 
         tools_menu = menubar.addMenu("Tools")
         tool_pen = QAction("Pen", self)
