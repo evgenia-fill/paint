@@ -5,7 +5,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
 
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction
-from canvas import MyGraphicsView
+from canvas import Canvas
 from functions import Functions
 
 
@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Paint")
         self.resize(800, 600)
-        self.canvas = MyGraphicsView(800, 600)
+        self.canvas = Canvas(800, 600)
         self.setCentralWidget(self.canvas)
         self.functions = Functions(self.canvas)
 
@@ -41,9 +41,12 @@ class MainWindow(QMainWindow):
         tool_eraser.triggered.connect(self.canvas.set_eraser_tool)
         tool_bucket = QAction("Bucket", self)
         tool_bucket.triggered.connect(self.canvas.set_bucket_tool)
+        tool_selection = QAction("Selection", self)
+        tool_selection.triggered.connect(self.canvas.set_selection_tool)
         tools_menu.addAction(tool_pen)
         tools_menu.addAction(tool_eraser)
         tools_menu.addAction(tool_bucket)
+        tools_menu.addAction(tool_selection)
 
         shapes_menu = menubar.addMenu("Shapes")
         shapes_line = QAction("Line", self)
@@ -79,6 +82,16 @@ class MainWindow(QMainWindow):
         bucket_color_action = QAction("Color", self)
         bucket_color_action.triggered.connect(lambda: self.functions.select_color("bucket"))
         bucket_menu.addAction(bucket_color_action)
+
+        selection_menu = menubar.addMenu("Selection")
+        selection_action = QAction("Selection", self)
+        selection_action.triggered.connect(self.canvas.set_selection_tool)
+        selection_color_action = QAction("Fill color", self)
+        selection_color_action.triggered.connect(lambda: self.functions.fill_selection())
+        selection_clear_action = QAction("Clear", self)
+        selection_clear_action.triggered.connect(lambda: self.functions.clear_selection())
+        selection_menu.addAction(selection_color_action)
+        selection_menu.addAction(selection_clear_action)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
-from PyQt5.QtGui import QColor, QImage
+from PyQt5.QtGui import QColor, QImage, QPainter
 from PIL import Image
 from resize_dialog import ResizeDialog
 
@@ -23,7 +23,7 @@ class Functions(QWidget):
         self.canvas = canvas
 
     def clear_canvas(self):
-        self.scene.fill(QColor("white"))
+        self.canvas.scene.fill(QColor("white"))
         self.update()
 
     def save_canvas(self):
@@ -57,6 +57,9 @@ class Functions(QWidget):
                 self.canvas.pen_color = color
             elif tool == "bucket":
                 self.canvas.bucket_color = color
+            elif tool == "selection":
+                self.canvas.selection_fill_color = color
+                return color
 
     def set_size(self, tool: str):
         if tool == "pen":
@@ -83,3 +86,20 @@ class Functions(QWidget):
             main_window = self.canvas.parentWidget()
             menubar_height = main_window.menuBar().height()
             main_window.setFixedSize(new_w, new_h + menubar_height)
+
+    def fill_selection(self):
+        color = self.select_color("selection")
+        if self.canvas.selection_rect is not None:
+            rect = self.canvas.selection_rect.normalized()
+            painter = QPainter(self.canvas.scene)
+            painter.fillRect(rect, color)
+            painter.end()
+            self.canvas.update()
+
+    def clear_selection(self):
+        if self.canvas.selection_rect is not None:
+            rect = self.canvas.selection_rect.normalized()
+            painter = QPainter(self.canvas.scene)
+            painter.fillRect(rect, QColor("white"))
+            painter.end()
+            self.canvas.update()
