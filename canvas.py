@@ -200,3 +200,19 @@ class Canvas(QWidget):
         self.scene = new_scene
         self.setFixedSize(w, h)
         self.update()
+
+    # def change_brightness(self, delta):
+    #     if self.selection_rect and not self.selection_rect.isNull():
+    #         rect = self.selection_rect.normalized()
+    #     else:
+    #         rect = self.scene.rect()
+    #     for y in range(rect.top(), rect.bottom() + 1):
+    #         for x in range(rect.left(), rect.right() + 1):
+    #             old_color = QColor(self.scene.pixel(x, y))
+    #             r, g, b = old_color.red(), old_color.green(), old_color.blue()
+    #             new_r = max(0, min(255, r + delta))
+    #             new_g = max(0, min(255, g + delta))
+    #             new_b = max(0, min(255, b + delta))
+    #             self.scene.setPixelColor(x, y, QColor(new_r, new_g, new_b))
+    #
+    #     self.update()

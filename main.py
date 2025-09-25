@@ -4,7 +4,7 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.abspath(
     ".venv/lib/python3.12/site-packages/PyQt5/Qt5/plugins/platforms")
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QPushButton, QVBoxLayout, QWidget, QInputDialog
 from canvas import Canvas
 from functions import Functions
 
@@ -18,6 +18,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.canvas)
         self.functions = Functions(self.canvas)
 
+        self.brightness_button = QPushButton("Изменить яркость")
+        self.brightness_button.clicked.connect(self.open_brightness_dialog)
+        layout = QVBoxLayout()
+        layout.addWidget(self.brightness_button)
+        layout.addWidget(self.canvas)
+
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("File")
@@ -29,9 +39,9 @@ class MainWindow(QMainWindow):
         exit_action.triggered.connect(self.functions.load_canvas)
         resize_action = QAction("Set size", self)
         resize_action.triggered.connect(self.functions.resize_canvas)
-        file_menu.addAction(clear_action)
         file_menu.addAction(save_action)
         file_menu.addAction(exit_action)
+        file_menu.addAction(clear_action)
         file_menu.addAction(resize_action)
 
         tools_menu = menubar.addMenu("Tools")
@@ -92,6 +102,17 @@ class MainWindow(QMainWindow):
         selection_clear_action.triggered.connect(lambda: self.functions.clear_selection())
         selection_menu.addAction(selection_color_action)
         selection_menu.addAction(selection_clear_action)
+
+    def open_brightness_dialog(self):
+        delta, ok = QInputDialog.getInt(
+            self,
+            "Регулировка яркости",
+            "Введите значение (-255 до 255):",
+            min=-255,
+            max=255
+        )
+        if ok and delta != 0:
+            self.functions.change_brightness(delta)
 
 
 if __name__ == "__main__":

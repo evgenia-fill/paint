@@ -103,3 +103,19 @@ class Functions(QWidget):
             painter.fillRect(rect, QColor("white"))
             painter.end()
             self.canvas.update()
+
+    def change_brightness(self, delta):
+        if self.canvas.selection_rect and not self.canvas.selection_rect.isNull():
+            rect = self.canvas.selection_rect.normalized()
+        else:
+            rect = self.canvas.scene.rect()
+        for y in range(rect.top(), rect.bottom() + 1):
+            for x in range(rect.left(), rect.right() + 1):
+                old_color = QColor(self.canvas.scene.pixel(x, y))
+                r, g, b = old_color.red(), old_color.green(), old_color.blue()
+                new_r = max(0, min(255, r + delta))
+                new_g = max(0, min(255, g + delta))
+                new_b = max(0, min(255, b + delta))
+                self.canvas.scene.setPixelColor(x, y, QColor(new_r, new_g, new_b))
+
+        self.canvas.update()
