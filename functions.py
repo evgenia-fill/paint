@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog
+from PyQt5.QtWidgets import QWidget, QColorDialog, QInputDialog, QFileDialog, QFontDialog
 from PyQt5.QtGui import QColor, QImage, QPainter
 from PIL import Image
 from resize_dialog import ResizeDialog
@@ -60,6 +60,8 @@ class Functions(QWidget):
             elif tool == "selection":
                 self.canvas.selection_fill_color = color
                 return color
+            elif tool == "text":
+                self.canvas.text_color = color
 
     def set_size(self, tool: str):
         if tool == "pen":
@@ -133,3 +135,9 @@ class Functions(QWidget):
                 self.canvas.scene.setPixelColor(x, y, QColor.fromRgbF(gray, gray, gray))
 
         self.canvas.update()
+
+    def select_text_font(self):
+        font, ok = QFontDialog.getFont(self.canvas.text_font, self, "Выберите шрифт")
+        if not ok:
+            return
+        self.canvas.text_font = font

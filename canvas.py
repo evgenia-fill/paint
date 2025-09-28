@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter
+from PyQt5.QtWidgets import QWidget, QInputDialog, QFontDialog
+from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter, QFont
 from PyQt5.QtCore import Qt, QPoint, QRect
 
 import functions
@@ -17,7 +17,9 @@ class Canvas(QWidget):
         self.eraser_width = 4
         self.pen_color = QColor("black")
         self.bucket_color = QColor("blue")
-        self.tool = "pen"  # pen, eraser, bucket, shapes, selection
+        self.text_color = QColor("black")
+        self.text_font = QFont("Arial", 12)
+        self.tool = "pen"  # pen, eraser, bucket, shapes, selection, text
         self.setFixedSize(weight, height)
         self.selection_rect = None
         self.selection_image = None
@@ -52,6 +54,12 @@ class Canvas(QWidget):
     def set_selection_tool(self):
         self.tool = "selection"
 
+    def set_text_tool(self):
+        self.tool = "text"
+
+    def set_text_font(self, font):
+        self.text_font = font
+
     def set_pen_width(self, width):
         self.pen_width = width
 
@@ -60,6 +68,9 @@ class Canvas(QWidget):
 
     def set_bucket_color(self, color):
         self.bucket_color = color
+
+    def set_text_color(self, color):
+        self.text_color = color
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -94,6 +105,10 @@ class Canvas(QWidget):
                 else:
                     self.last_point = start_pos
                 self.draw_line(start_pos)
+
+            elif self.tool == "text":
+                self.add_text(start_pos)  # Новый метод для ввода и рисования текста
+                self.update()
 
             elif self.tool in ["line", "rect", "ellipse"]:
                 self.start_point = start_pos
@@ -201,18 +216,13 @@ class Canvas(QWidget):
         self.setFixedSize(w, h)
         self.update()
 
-    # def change_brightness(self, delta):
-    #     if self.selection_rect and not self.selection_rect.isNull():
-    #         rect = self.selection_rect.normalized()
-    #     else:
-    #         rect = self.scene.rect()
-    #     for y in range(rect.top(), rect.bottom() + 1):
-    #         for x in range(rect.left(), rect.right() + 1):
-    #             old_color = QColor(self.scene.pixel(x, y))
-    #             r, g, b = old_color.red(), old_color.green(), old_color.blue()
-    #             new_r = max(0, min(255, r + delta))
-    #             new_g = max(0, min(255, g + delta))
-    #             new_b = max(0, min(255, b + delta))
-    #             self.scene.setPixelColor(x, y, QColor(new_r, new_g, new_b))
-    #
-    #     self.update()
+    def add_text(self, pos):
+        text, ok = QInputDialog.getText(self, "Ввод текста", "Введите текст:")
+        if not ok or not text:
+            return
+
+        painter = QPainter(self.scene)
+        painter.setFont(self.text_font)
+        painter.setPen(QPen(self.text_color))
+        painter.drawText(pos.x(), pos.y(), text)
+        painter.end()

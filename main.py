@@ -56,11 +56,14 @@ class MainWindow(QMainWindow):
         tool_eraser.triggered.connect(self.canvas.set_eraser_tool)
         tool_bucket = QAction("Bucket", self)
         tool_bucket.triggered.connect(self.canvas.set_bucket_tool)
+        tool_text = QAction("Text", self)
+        tool_text.triggered.connect(self.canvas.set_text_tool)
         tool_selection = QAction("Selection", self)
         tool_selection.triggered.connect(self.canvas.set_selection_tool)
         tools_menu.addAction(tool_pen)
         tools_menu.addAction(tool_eraser)
         tools_menu.addAction(tool_bucket)
+        tools_menu.addAction(tool_text)
         tools_menu.addAction(tool_selection)
 
         shapes_menu = menubar.addMenu("Shapes")
@@ -107,6 +110,16 @@ class MainWindow(QMainWindow):
         selection_clear_action.triggered.connect(lambda: self.functions.clear_selection())
         selection_menu.addAction(selection_color_action)
         selection_menu.addAction(selection_clear_action)
+
+        text_menu = menubar.addMenu("Text")
+        text_action = QAction("Text", self)
+        text_action.triggered.connect(self.canvas.set_text_tool)
+        text_color_action = QAction("Color", self)
+        text_font_action = QAction("Font", self)
+        text_color_action.triggered.connect(lambda: self.functions.select_color("text"))
+        text_font_action.triggered.connect(lambda: self.functions.select_text_font())
+        text_menu.addAction(text_color_action)
+        text_menu.addAction(text_font_action)
 
     def open_brightness_dialog(self):
         delta, ok = QInputDialog.getInt(
