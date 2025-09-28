@@ -70,7 +70,7 @@ class Functions(QWidget):
             current = self.canvas.eraser_width
         else:
             return
-        size, ok = QInputDialog.getInt(self, "Set Size", f"Enter {tool} size:", value=current, min=1, max=50)
+        size, ok = QInputDialog.getInt(self, "Размер", f"Введите размер {tool}:", value=current, min=1, max=50)
         if ok:
             if tool == "pen":
                 self.canvas.pen_width = size
