@@ -119,3 +119,17 @@ class Functions(QWidget):
                 self.canvas.scene.setPixelColor(x, y, QColor(new_r, new_g, new_b))
 
         self.canvas.update()
+
+    def make_blackwhite(self):
+        if self.canvas.selection_rect and not self.canvas.selection_rect.isNull():
+            rect = self.canvas.selection_rect.normalized()
+        else:
+            rect = self.canvas.scene.rect()
+        for y in range(rect.top(), rect.bottom() + 1):
+            for x in range(rect.left(), rect.right() + 1):
+                old_color = QColor(self.canvas.scene.pixel(x, y))
+                r, g, b = old_color.red(), old_color.green(), old_color.blue()
+                gray = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0
+                self.canvas.scene.setPixelColor(x, y, QColor.fromRgbF(gray, gray, gray))
+
+        self.canvas.update()

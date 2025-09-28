@@ -18,10 +18,15 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.canvas)
         self.functions = Functions(self.canvas)
 
+        layout = QVBoxLayout()
+
         self.brightness_button = QPushButton("Изменить яркость")
         self.brightness_button.clicked.connect(self.open_brightness_dialog)
-        layout = QVBoxLayout()
+        self.grayscale_button = QPushButton("Сделать чб")
+        self.grayscale_button.clicked.connect(self.functions.make_blackwhite)
+
         layout.addWidget(self.brightness_button)
+        layout.addWidget(self.grayscale_button)
         layout.addWidget(self.canvas)
 
         central_widget = QWidget()
