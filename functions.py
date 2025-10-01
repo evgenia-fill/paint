@@ -106,7 +106,18 @@ class Functions(QWidget):
             painter.end()
             self.canvas.update()
 
-    def change_brightness(self, delta):
+    def change_brightness(self):
+        delta, ok = QInputDialog.getInt(
+            self,
+            "Регулировка яркости",
+            "Введите значение (-255 до 255):",
+            min=-255,
+            max=255
+        )
+        if not ok:
+            return
+        self.canvas.delta = delta
+
         if self.canvas.selection_rect and not self.canvas.selection_rect.isNull():
             rect = self.canvas.selection_rect.normalized()
         else:

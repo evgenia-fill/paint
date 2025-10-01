@@ -29,6 +29,7 @@ class Canvas(QWidget):
         self.functions = Functions(self)
         self.rotate_angle = None
         self.is_horizontal_flip = None
+        self.delta = None
 
     def set_tool(self, name):
         self.tool = name

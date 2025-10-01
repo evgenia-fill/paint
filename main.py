@@ -18,21 +18,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.canvas)
         self.functions = Functions(self.canvas)
 
-        layout = QVBoxLayout()
-
-        self.brightness_button = QPushButton("Изменить яркость")
-        self.brightness_button.clicked.connect(self.open_brightness_dialog)
-        self.grayscale_button = QPushButton("Сделать чб")
-        self.grayscale_button.clicked.connect(self.functions.make_blackwhite)
-
-        layout.addWidget(self.brightness_button)
-        layout.addWidget(self.grayscale_button)
-        layout.addWidget(self.canvas)
-
-        central_widget = QWidget()
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("Файл")
@@ -54,8 +39,14 @@ class MainWindow(QMainWindow):
         rotate_action.triggered.connect(self.functions.rotate_canvas)
         flip_action = QAction("Отразить", self)
         flip_action.triggered.connect(self.functions.flip_canvas)
+        brightness_action = QAction("Изменить яркость", self)
+        brightness_action.triggered.connect(self.functions.change_brightness)
+        grayscale_action = QAction("Сделать чб", self)
+        grayscale_action.triggered.connect(self.functions.make_blackwhite)
         canvas_menu.addAction(rotate_action)
         canvas_menu.addAction(flip_action)
+        canvas_menu.addAction(brightness_action)
+        canvas_menu.addAction(grayscale_action)
 
         tools_menu = menubar.addMenu("Инструменты")
         tool_pen = QAction("Ручка", self)
@@ -134,17 +125,6 @@ class MainWindow(QMainWindow):
         text_font_action.triggered.connect(lambda: self.functions.select_text_font())
         text_menu.addAction(text_color_action)
         text_menu.addAction(text_font_action)
-
-    def open_brightness_dialog(self):
-        delta, ok = QInputDialog.getInt(
-            self,
-            "Регулировка яркости",
-            "Введите значение (-255 до 255):",
-            min=-255,
-            max=255
-        )
-        if ok and delta != 0:
-            self.functions.change_brightness(delta)
 
 
 if __name__ == "__main__":
