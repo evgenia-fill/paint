@@ -1,8 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QInputDialog, QFontDialog
+from PyQt5.QtWidgets import QWidget, QInputDialog
 from PyQt5.QtGui import QColor, QPen, QMouseEvent, QImage, QPainter, QFont
 from PyQt5.QtCore import Qt, QPoint, QRect
-
-import functions
 from functions import Functions
 
 
@@ -11,7 +9,7 @@ class Canvas(QWidget):
         super().__init__()
         self.start_point = None
         self.last_point = None
-        self.scene = QImage(weight, height, QImage.Format_RGB16)
+        self.scene = QImage(weight, height, QImage.Format_ARGB32)
         self.scene.fill(QColor("white"))
         self.pen_width = 3
         self.eraser_width = 4
@@ -29,6 +27,8 @@ class Canvas(QWidget):
         self.start_move = None
         self.move_offset = QPoint(0, 0)
         self.functions = Functions(self)
+        self.rotate_angle = None
+        self.is_horizontal_flip = None
 
     def set_tool(self, name):
         self.tool = name
@@ -107,7 +107,7 @@ class Canvas(QWidget):
                 self.draw_line(start_pos)
 
             elif self.tool == "text":
-                self.add_text(start_pos)  # Новый метод для ввода и рисования текста
+                self.add_text(start_pos)
                 self.update()
 
             elif self.tool in ["line", "rect", "ellipse"]:
